@@ -45,12 +45,12 @@ export function Header({ isPricePage = false }: { isPricePage?: boolean }) {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
-        <a href={withBasePath()} className="flex items-center gap-2.5 sm:gap-3 shrink-0" aria-label="Ami Dental">
+        <a href={withBasePath()} className="flex items-center gap-2 sm:gap-2.5 shrink-0" aria-label="Ami Dental">
           <img
             src={withBasePath("media/brand/tooth-only.png")}
             alt=""
             aria-hidden="true"
-            className="h-12 sm:h-14 lg:h-16 w-auto object-contain block shrink-0"
+            className="h-14 sm:h-16 lg:h-[72px] w-auto object-contain block shrink-0 translate-y-[2px]"
           />
           <span className="font-display text-[32px] sm:text-[40px] lg:text-[46px] leading-[0.85] tracking-tight flex items-center gap-1.5">
             <span className="text-brand-pink-strong">Ami</span>
