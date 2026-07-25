@@ -216,3 +216,11 @@
 .marquee-pause:hover .marquee-track-reverse {
   animation-play-state: paused;
 }
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
