@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUp } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Appointment } from "@/components/site/Appointment";
@@ -30,7 +31,51 @@ export const Route = createFileRoute("/price")({
 
 function PricePage() {
   const [active, setActive] = useState<string>(PRICE_CATEGORIES[0].id);
-  const category = PRICE_CATEGORIES.find((c) => c.id === active) ?? PRICE_CATEGORIES[0];
+  const [showTop, setShowTop] = useState(false);
+  const sectionsRef = useRef<Record<string, HTMLElement | null>>({});
+  const pillsRef = useRef<HTMLDivElement | null>(null);
+
+  // Scrollspy: highlight active pill based on section in view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // pick the entry closest to the top of the viewport
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) {
+          const id = (visible[0].target as HTMLElement).dataset.catId;
+          if (id) setActive(id);
+        }
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+    );
+    Object.values(sectionsRef.current).forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Back-to-top visibility
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 600);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Keep active pill visible in horizontal scroller on mobile
+  useEffect(() => {
+    const pill = pillsRef.current?.querySelector<HTMLElement>(
+      `[data-pill="${active}"]`
+    );
+    pill?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [active]);
+
+  const scrollToCategory = (id: string) => {
+    const el = sectionsRef.current[id];
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 180;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -52,20 +97,24 @@ function PricePage() {
         </div>
       </section>
 
-      {/* Filter pills */}
-      <div className="sticky top-16 z-30 bg-background/85 backdrop-blur border-y border-border/60">
-        <div className="mx-auto max-w-5xl px-3 sm:px-6 py-3 sm:py-4">
-          <div className="flex gap-2 sm:gap-2.5 overflow-x-auto scrollbar-hide -mx-1 px-1 snap-x">
+      {/* Category pills — scrollable on mobile, wrapped on desktop */}
+      <div className="sticky top-[72px] lg:top-[80px] z-30 bg-background/90 backdrop-blur border-y border-border/60">
+        <div className="mx-auto max-w-6xl px-3 sm:px-6 py-3 sm:py-4">
+          <div
+            ref={pillsRef}
+            className="flex lg:flex-wrap gap-2 sm:gap-2.5 overflow-x-auto lg:overflow-visible scrollbar-hide -mx-1 px-1 snap-x lg:justify-center"
+          >
             {PRICE_CATEGORIES.map((c) => {
               const isActive = c.id === active;
               return (
                 <button
                   key={c.id}
+                  data-pill={c.id}
                   type="button"
-                  onClick={() => setActive(c.id)}
+                  onClick={() => scrollToCategory(c.id)}
                   className={`shrink-0 snap-start rounded-full px-4 sm:px-5 py-2 text-xs sm:text-sm font-medium transition-colors border ${
                     isActive
-                      ? "text-white border-transparent"
+                      ? "text-white border-transparent shadow-sm"
                       : "bg-background text-foreground/70 border-border hover:bg-muted"
                   }`}
                   style={
@@ -86,58 +135,83 @@ function PricePage() {
       </div>
 
       <main className="flex-1 py-10 md:py-14">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-sm p-5 sm:p-8 md:p-10">
-            <div
-              className="text-[11px] sm:text-xs uppercase tracking-[0.22em] font-medium"
-              style={{ color: "var(--brand-green-deep)" }}
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
+          {PRICE_CATEGORIES.map((category) => (
+            <section
+              key={category.id}
+              data-cat-id={category.id}
+              ref={(el) => {
+                sectionsRef.current[category.id] = el;
+              }}
+              className="scroll-mt-40 rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-sm p-5 sm:p-8 md:p-10"
             >
-              — {category.label}
-            </div>
-            <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-display leading-tight">
-              {category.title}
-            </h2>
+              <div
+                className="text-[11px] sm:text-xs uppercase tracking-[0.22em] font-medium"
+                style={{ color: "var(--brand-green-deep)" }}
+              >
+                — {category.label}
+              </div>
+              <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-display leading-tight">
+                {category.title}
+              </h2>
 
-            <div className="mt-6 sm:mt-8 space-y-8 sm:space-y-10">
-              {category.groups.map((group, gi) => (
-                <div key={gi}>
-                  {group.title && (
-                    <h3 className="text-lg sm:text-xl font-display mb-3 sm:mb-4 text-foreground/85">
-                      {group.title}
-                    </h3>
-                  )}
-                  <ul className="divide-y divide-border/60">
-                    {group.items.map((it) => (
-                      <li
-                        key={it.n}
-                        className="flex items-start gap-4 sm:gap-6 py-3.5 sm:py-4"
-                      >
-                        <span className="min-w-0 flex-1 text-sm sm:text-[15px] leading-snug text-foreground/90">
-                          {it.name}
-                        </span>
-                        <span
-                          className="shrink-0 rounded-full px-3.5 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold tabular-nums whitespace-nowrap"
-                          style={{
-                            background:
-                              "color-mix(in oklab, var(--brand-green) 18%, transparent)",
-                            color: "var(--brand-green-deep)",
-                          }}
+              <div className="mt-6 sm:mt-8 space-y-8 sm:space-y-10">
+                {category.groups.map((group, gi) => (
+                  <div key={gi}>
+                    {group.title && (
+                      <h3 className="text-lg sm:text-xl font-display mb-3 sm:mb-4 text-foreground/85">
+                        {group.title}
+                      </h3>
+                    )}
+                    <ul className="divide-y divide-border/60">
+                      {group.items.map((it) => (
+                        <li
+                          key={it.n}
+                          className="flex items-start gap-4 sm:gap-6 py-3.5 sm:py-4"
                         >
-                          {it.price}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
+                          <span className="min-w-0 flex-1 text-sm sm:text-[15px] leading-snug text-foreground/90">
+                            {it.name}
+                          </span>
+                          <span
+                            className="shrink-0 rounded-full px-3.5 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold tabular-nums whitespace-nowrap"
+                            style={{
+                              background:
+                                "color-mix(in oklab, var(--brand-green) 18%, transparent)",
+                              color: "var(--brand-green-deep)",
+                            }}
+                          >
+                            {it.price}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
 
-          <p className="mt-8 sm:mt-10 text-sm text-muted-foreground text-center">
+          <p className="pt-2 text-sm text-muted-foreground text-center">
             Не знайшли потрібну послугу? Залиште заявку — адміністратор передзвонить та підкаже вартість.
           </p>
         </div>
       </main>
+
+      {/* Back-to-top */}
+      <button
+        type="button"
+        aria-label="Наверх"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-40 h-12 w-12 rounded-full text-white shadow-lg inline-flex items-center justify-center transition-all ${
+          showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
+        }`}
+        style={{
+          background:
+            "linear-gradient(135deg, var(--brand-green-strong), var(--brand-green-deep))",
+        }}
+      >
+        <ArrowUp className="h-5 w-5" />
+      </button>
 
       <Appointment />
       <Footer />
