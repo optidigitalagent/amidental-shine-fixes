@@ -44,15 +44,15 @@ export function Header({ isPricePage = false }: { isPricePage?: boolean }) {
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
-        <a href={withBasePath()} className="flex items-center gap-3 shrink-0 leading-none" aria-label="Ami Dental">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+        <a href={withBasePath()} className="flex items-center gap-2 sm:gap-3 shrink-0" aria-label="Ami Dental">
           <img
             src={withBasePath("media/brand/tooth-only.png")}
             alt=""
             aria-hidden="true"
-            className="h-14 sm:h-16 lg:h-[68px] w-auto object-contain block shrink-0"
+            className="h-16 sm:h-20 lg:h-24 w-auto object-contain block shrink-0"
           />
-          <span className="font-display text-[28px] sm:text-[34px] lg:text-[38px] leading-none tracking-tight flex items-baseline gap-1.5">
+          <span className="font-display text-[32px] sm:text-[40px] lg:text-[46px] leading-none tracking-tight flex items-center gap-1.5">
             <span style={{ color: "var(--brand-pink-strong)" }}>Ami</span>
             <span style={{ color: "var(--brand-green-deep)" }}>Dental</span>
           </span>
