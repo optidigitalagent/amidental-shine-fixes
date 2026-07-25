@@ -50,7 +50,7 @@ export function Header({ isPricePage = false }: { isPricePage?: boolean }) {
             src={withBasePath("media/brand/tooth-only.png")}
             alt=""
             aria-hidden="true"
-            className="h-14 sm:h-16 lg:h-[72px] w-auto object-contain block shrink-0 translate-y-[2px]"
+            className="h-12 sm:h-14 lg:h-16 w-auto object-contain block shrink-0 translate-y-[2px]"
           />
           <span className="font-display text-[32px] sm:text-[40px] lg:text-[46px] leading-[0.85] tracking-tight flex items-center gap-1.5">
             <span className="text-brand-pink-strong">Ami</span>
