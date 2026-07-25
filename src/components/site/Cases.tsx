@@ -80,33 +80,33 @@ export function Cases() {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
           onClick={() => setOpen(null)}
         >
           <div
-            className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-background p-5 sm:p-8 shadow-2xl"
+            className="relative w-full max-w-3xl rounded-2xl sm:rounded-3xl bg-background p-3 sm:p-8 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setOpen(null)}
               aria-label="Закрити"
-              className="absolute right-3 top-3 z-10 h-11 w-11 rounded-full bg-background border border-border shadow-md inline-flex items-center justify-center hover:bg-muted transition-colors"
+              className="absolute right-2 top-2 sm:right-3 sm:top-3 z-10 h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-background border border-border shadow-md inline-flex items-center justify-center hover:bg-muted transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
-            <div className="grid gap-4 sm:grid-cols-2 mt-6 sm:mt-2">
+            <div className="grid gap-2 sm:gap-4 grid-cols-2 mt-10 sm:mt-2">
               <figure>
-                <div className="text-xs uppercase tracking-wider mb-2 text-muted-foreground">До</div>
-                <img src={open.before} alt="До" className="w-full aspect-square rounded-2xl object-cover border border-border/60" />
+                <div className="text-[10px] sm:text-xs uppercase tracking-wider mb-1.5 sm:mb-2 text-muted-foreground">До</div>
+                <img src={open.before} alt="До" className="w-full aspect-square rounded-xl sm:rounded-2xl object-cover border border-border/60" />
               </figure>
               <figure>
                 <div
-                  className="text-xs uppercase tracking-wider mb-2"
+                  className="text-[10px] sm:text-xs uppercase tracking-wider mb-1.5 sm:mb-2"
                   style={{ color: "var(--brand-green-deep)" }}
                 >
                   Після
                 </div>
-                <img src={open.after} alt="Після" className="w-full aspect-square rounded-2xl object-cover border border-border/60" />
+                <img src={open.after} alt="Після" className="w-full aspect-square rounded-xl sm:rounded-2xl object-cover border border-border/60" />
               </figure>
             </div>
           </div>
