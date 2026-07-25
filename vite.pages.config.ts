@@ -5,7 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   root: "pages",
-  base: "/amident-shine/",
+  base: "/amidental-shine-fixes/",
   publicDir: "../public",
   plugins: [tsconfigPaths(), tailwindcss(), react()],
   build: {
