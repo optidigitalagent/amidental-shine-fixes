@@ -45,16 +45,16 @@ export function Header({ isPricePage = false }: { isPricePage?: boolean }) {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
-        <a href={withBasePath()} className="flex items-center gap-2 sm:gap-3 shrink-0" aria-label="Ami Dental">
+        <a href={withBasePath()} className="flex items-center gap-2.5 sm:gap-3 shrink-0" aria-label="Ami Dental">
           <img
             src={withBasePath("media/brand/tooth-only.png")}
             alt=""
             aria-hidden="true"
-            className="h-16 sm:h-20 lg:h-24 w-auto object-contain block shrink-0"
+            className="h-10 sm:h-12 lg:h-14 w-auto object-contain block shrink-0"
           />
-          <span className="font-display text-[32px] sm:text-[40px] lg:text-[46px] leading-none tracking-tight flex items-center gap-1.5">
-            <span style={{ color: "var(--brand-pink-strong)" }}>Ami</span>
-            <span style={{ color: "var(--brand-green-deep)" }}>Dental</span>
+          <span className="font-display text-[34px] sm:text-[42px] lg:text-[48px] leading-[0.85] tracking-tight flex items-center gap-1.5">
+            <span className="text-brand-pink-strong">Ami</span>
+            <span className="text-brand-green-deep">Dental</span>
           </span>
         </a>
 
